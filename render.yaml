@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: constellate
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz

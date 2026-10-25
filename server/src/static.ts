@@ -30,7 +30,7 @@ export function staticHandler(root: string) {
     }
 
     let file = path.normalize(path.join(root, decodeURIComponent(url.pathname)));
-    if (!file.startsWith(root)) {
+    if (!file.startsWith(root + path.sep)) {
       res.writeHead(403).end();
       return;
     }

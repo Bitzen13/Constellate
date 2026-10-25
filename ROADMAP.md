@@ -44,12 +44,13 @@ Three phases. Each ends with something you can run and look at. Full spec: [docs
 
 **Goal:** it's a real study tool, deployed, and friends are using it.
 
-- [ ] Central clock counting up from entering focus mode (the one approved piece of on-screen text)
-- [ ] Study modes: open-ended count-up (default), Pomodoro, timed goal (`mode {type, duration}`)
-- [ ] Pause / resume: stops your clock and freezes your dot in place
-- [ ] Server tracks each user's study time and paused state; included in roster data for the click menu
-- [ ] Production build; deploy server to Render or Fly.io, client to a static host
-- [ ] Configurable server URL via env for the client
+- [x] Central clock counting up from entering focus mode (the one approved piece of on-screen text)
+- [x] Study modes: open-ended count-up (default), Pomodoro, timed goal (`mode {type, duration}`)
+- [x] Pause / resume: stops your clock and freezes your dot in place
+- [x] Server tracks each user's study time and paused state; included in roster data for the click menu
+- [x] Production build: one process serves client + `/ws`; `Dockerfile`, `render.yaml`, `fly.toml` ready
+- [x] Configurable server URL via env for the client (`VITE_SERVER_URL`, for split hosting)
+- [ ] Deploy to Render or Fly.io (needs your account; see README)
 - [ ] Test session with friends; collect feedback and tune physics/visuals
 
 **Done when:** friends are studying on the live site at the same time.
