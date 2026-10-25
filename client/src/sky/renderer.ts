@@ -34,6 +34,7 @@ interface DotState {
 
 export class SkyRenderer {
   hovered: DotId | null = null;
+  selected: DotId | null = null; // its click menu already shows the name, so no hover label
 
   private ctx: CanvasRenderingContext2D;
   private w = 0;
@@ -116,7 +117,7 @@ export class SkyRenderer {
     for (const [id, s] of this.states) this.drawTrail(s, this.life(s, now), id === link.meId, crowded && id !== link.meId);
     for (const [id, s] of this.states) this.drawDot(s, this.life(s, now), id === link.meId);
 
-    if (this.hovered !== null) {
+    if (this.hovered !== null && this.hovered !== this.selected) {
       const s = this.states.get(this.hovered);
       const meta = link.dots.get(this.hovered);
       if (s && meta) this.drawLabel(s, meta.name, this.hovered === link.meId);

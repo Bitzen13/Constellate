@@ -19,12 +19,14 @@ export const SkyCanvas = memo(function SkyCanvas({ link, followId = null, follow
   useEffect(() => {
     const renderer = new SkyRenderer(canvasRef.current!);
     rendererRef.current = renderer;
+    if (import.meta.env.DEV) Object.assign(window, { __sky: { renderer, link } }); // for browser tests
 
     let raf = 0;
     const loop = (now: number) => {
       renderer.frame(now, link);
       const { followId, followRef, onSelect } = latest.current;
       const el = followRef?.current;
+      renderer.selected = followId;
       if (followId !== null && el) {
         const p = renderer.screenPos(followId);
         if (p) el.style.transform = `translate(${p.x}px, ${p.y}px)`;

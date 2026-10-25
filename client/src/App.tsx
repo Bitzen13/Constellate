@@ -1,20 +1,37 @@
-import { useMemo } from 'react';
+import { useState } from 'react';
+import { DEFAULT_COLOR } from '@constellate/shared';
+import { Focus } from './components/Focus';
+import { Idle } from './components/Idle';
 import { NebulaCanvas } from './components/NebulaCanvas';
-import { SkyCanvas } from './components/SkyCanvas';
-import { DemoSource } from './sky/demo';
+import { Setup } from './components/Setup';
+import { loadIdentity, saveIdentity, type Identity } from './identity';
 
-function demoCount(): number {
+type Screen = 'setup' | 'idle' | 'focus';
+
+// ?demo=N swaps the server for N local fake dots.
+function demoCount(): number | null {
   const n = Number(new URLSearchParams(location.search).get('demo'));
-  return Number.isFinite(n) && n > 0 ? Math.min(n, 1000) : 40;
+  return Number.isFinite(n) && n > 0 ? Math.min(Math.floor(n), 1000) : null;
 }
 
-// Phase 1: local prototype with fake dots.
+const demo = demoCount();
+
 export function App() {
-  const link = useMemo(() => new DemoSource(demoCount(), { name: 'You', color: '#9775fa' }), []);
+  const [identity, setIdentity] = useState<Identity | null>(() => loadIdentity() ?? (demo ? { name: 'You', color: DEFAULT_COLOR } : null));
+  const [screen, setScreen] = useState<Screen>(() => (demo ? 'focus' : identity ? 'idle' : 'setup'));
+
+  const finishSetup = (next: Identity) => {
+    saveIdentity(next);
+    setIdentity(next);
+    setScreen('idle');
+  };
+
   return (
     <>
       <NebulaCanvas />
-      <SkyCanvas link={link} />
+      {screen === 'setup' && <Setup initial={identity} onDone={finishSetup} />}
+      {screen === 'idle' && identity && <Idle identity={identity} onStart={() => setScreen('focus')} onEdit={() => setScreen('setup')} />}
+      {screen === 'focus' && identity && <Focus identity={identity} demo={demo} onExit={() => setScreen('idle')} />}
     </>
   );
 }
